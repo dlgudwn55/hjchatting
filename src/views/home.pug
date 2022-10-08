@@ -6,8 +6,22 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title Chatting Program
         link(rel="stylesheet", href="https://unpkg.com/mvp.css@1.12/mvp.css")
+        link(rel="stylesheet", href="/public/css/style.css")
     body
         header
-            button call
+            h1 H chatting
         main
+            div#welcome
+                form#login
+                    input#nickname(type="text", required, placeholder="nickname")
+                    input#room-name(type="text", required, placeholder="room-name")
+                    button Enter
+            div#room
+                ul
+                form#send-message
+                    input(type="text", placeholder="message to send")
+                    button#send-button Send
+                button#exit-button Get out
+                
+        script(src="/socket.io/socket.io.js") 
         script(src="/public/js/app.js") 
