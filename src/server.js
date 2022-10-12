@@ -48,20 +48,16 @@ wsServer.on("connection", (socket) => {
         socket["nickname"] = nickname
         socket["roomName"] = roomName
         socket.join(roomName);
-        // console.log(socket);
-        // socket.to(roomName).emit("welcome", nickname);
-        // wsServer.sockets.emit("room_change", getPublicRooms());
+        socket.to(roomName).emit("welcome", socket.nickname);
     });
-    socket.on("disconnect", () => {
-        console.log(`${socket.nickname} left`);
-        // console.log(socket);
-    });
+    // socket.on("disconnect", () => {
+    //     socket.rooms.forEach(room =>  socket.to(room).emit("bye", socket.nickname));
+    // });
     socket.on("get_out", (roomName) => {
-        socket.leave(roomName)
-        // console.log(socket);
+        socket.to(roomName).emit("out", socket.nickname)
+        socket.leave(roomName);
     })
     socket.on("new_message", (roomName, msg) => {
-        // console.log(msg);
         socket.to(roomName).emit("show_message", socket.nickname, msg);
     })
 })

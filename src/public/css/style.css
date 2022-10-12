@@ -1,3 +1,7 @@
 #exit-button {
     background-color: red;
 }
+
+.system {
+    font-style: italic;
+}

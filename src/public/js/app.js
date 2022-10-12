@@ -8,6 +8,7 @@ const exitBtn = document.getElementById("exit-button");
 
 let nickname;
 let roomName;
+let talk_history = [];
 
 if (localStorage.length === 0) {
     document.querySelector("header h1").innerText = "H chatting";
@@ -21,7 +22,17 @@ if (localStorage.length === 0) {
     roomDiv.hidden = false;
     socket.emit("enter_room", nickname, roomName);
     messageForm.addEventListener("submit", handleMessageSubmit);
-    exitBtn.addEventListener("click", handleExit)
+    exitBtn.addEventListener("click", handleExit);
+
+    if (localStorage.getItem("talk_history") !== null) {
+        talk_history = JSON.parse(localStorage.getItem("talk_history"));
+        const msgList = roomDiv.querySelector("div ul");
+        talk_history.forEach(talk => {
+            const li = document.createElement("li");
+            li.innerText = talk;
+            msgList.appendChild(li);
+        });
+    }
 }
 
 
@@ -50,6 +61,9 @@ function handleMessageSubmit(event) {
     li.innerText = `<You>: ${msgInput.value}`;
     msgList.appendChild(li);
     socket.emit("new_message", roomName, msgInput.value);
+
+    talk_history.push(`<You>: ${msgInput.value}`);
+    localStorage.setItem("talk_history", JSON.stringify(talk_history));
     msgInput.value = "";
 }
 
@@ -62,6 +76,9 @@ function handleExit() {
         localStorage.clear();
         nickname = null;
         roomName = null;
+
+        const msgList = roomDiv.querySelector("div ul");
+        msgList.innerHTML = "";
         // socket.disconnect();
     }
 }
@@ -69,10 +86,27 @@ function handleExit() {
 loginForm.addEventListener("submit", handleLoginSubmit);
 
 socket.on("show_message", (user, msg) => {
-    const msgInput = messageForm.querySelector("input");
     const msgList = roomDiv.querySelector("div ul");
     const li = document.createElement("li");
-    console.log(msg);
     li.innerText = `${user}: ${msg}`;
+    msgList.appendChild(li);
+
+    talk_history.push(`${user}: ${msg}`);
+    localStorage.setItem("talk_history", JSON.stringify(talk_history));
+})
+
+socket.on("welcome", (user) => {
+    const msgList = roomDiv.querySelector("div ul");
+    const li = document.createElement("li");
+    li.classList.add("system");
+    li.innerText = `${user} 이(가) 들어왔습니다.`;
+    msgList.appendChild(li);
+})
+
+socket.on("out", (user) => {
+    const msgList = roomDiv.querySelector("div ul");
+    const li = document.createElement("li");
+    li.classList.add("system");
+    li.innerText = `${user} 이(가) 나갔습니다.`;
     msgList.appendChild(li);
 })
