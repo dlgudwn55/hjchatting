@@ -5,6 +5,7 @@ import path from "path";
 
 const app = express();
 const __dirname = path.resolve();
+const PORT = process.env.PORT || 3000;
 
 app.set("view engine", "pug");
 app.set("views", __dirname + "/views");
@@ -22,24 +23,7 @@ const wsServer = new Server(httpServer, {
     }
 });
 
-function getPublicRooms() {
-    const {
-        sockets: {
-            adapter: {sids, rooms},
-        },
-    } = wsServer;
-    const publicRooms = [];
-    rooms.forEach((_, key) => {
-        if (sids.get(key) === undefined) {
-            publicRooms.push(key);
-        }
-    })
-    return publicRooms;
-}
 
-// function countRoom(roomName) {
-//     return wsServer.sockets.rooms.get(roomName)?.size;
-// }
 
 wsServer.on("connection", (socket) => {
     socket.onAny((event) => {
@@ -64,4 +48,4 @@ wsServer.on("connection", (socket) => {
     })
 })
 
-httpServer.listen(8081, handleListen);
+httpServer.listen(PORT, handleListen);
