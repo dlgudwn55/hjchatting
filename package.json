@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "description": "Chatting program made with Nodejs and SocketIO",
   "license": "MIT",
+  "engines": {"node": "14.0.0"},
+  "type": "module",
   "scripts": {
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "start": "node server.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.19.3",
