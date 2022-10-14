@@ -35,7 +35,6 @@ if (localStorage.length === 0) {
     }
 }
 
-
 function handleLoginSubmit(event) {
     event.preventDefault();
     const submittedNickname = loginForm.querySelector("#nickname");
@@ -109,4 +108,17 @@ socket.on("out", (user) => {
     li.classList.add("system");
     li.innerText = `${user} 이(가) 나갔습니다.`;
     msgList.appendChild(li);
+})
+
+socket.on("room_change", (rooms) => {
+    const roomList = welcomeDiv.querySelector("ul");
+    roomList.innerHTML = "";
+    if (rooms.length === 0) {
+        return;
+    }
+    rooms.forEach(room => {
+        const li = document.createElement("li");
+        li.innerText = room;
+        roomList.appendChild(li);
+    });
 })
