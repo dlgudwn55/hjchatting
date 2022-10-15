@@ -30,7 +30,6 @@ function getPublicRooms() {
             publicRooms.push(key);
         }
     })
-    console.log(rooms);
     return publicRooms;
 }
 
